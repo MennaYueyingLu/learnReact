@@ -1,0 +1,24 @@
+{
+  "name": "learn-react",
+  "version": "1.0.0",
+  "description": "test directory to learn react",
+  "main": "index.html",
+  "scripts": {
+    "start": "npm run lite",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lite": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MennaYueyingLu/learnReact.git"
+  },
+  "author": "Yueying",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MennaYueyingLu/learnReact/issues"
+  },
+  "homepage": "https://github.com/MennaYueyingLu/learnReact#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
