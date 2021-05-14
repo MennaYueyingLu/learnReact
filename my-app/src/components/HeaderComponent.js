@@ -1,4 +1,4 @@
-import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron } from 'reactstrap';
+import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron, Form, Button, Modal, ModalHeader, ModalBody, FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Component } from 'react';
 
@@ -8,7 +8,8 @@ class Header extends Component {
     
         this.toggleNav = this.toggleNav.bind(this);
         this.state = {
-          isNavOpen: false
+          isNavOpen: false,
+          isModalOpen: false
         };
       }
 
@@ -18,12 +19,24 @@ class Header extends Component {
         });
       }
 
+      toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+          });
+      }
+
+      handlelogin(event){
+        this.toggleModal();
+        alert("username: " + this.username.value + "password:" + this.password.value + "remember: " + this.remember.checked);
+        event.preventDefault();
+      }
+
     render() {
         return(
             <div>
                 <Navbar dark expand="md">
                     <div className="container">
-                        <NavbarToggler onClick={this.toggleNav} />
+                        <NavbarToggler onClick={this.toggleNav.bind(this)} />
                         <NavbarBrand className="mr-auto" href="/"><img src='assets/images/logo.png' height="30" width="41" alt='Ristorante Con Fusion' /></NavbarBrand>
                         <Collapse isOpen={this.state.isNavOpen} navbar>
                             <Nav navbar>
@@ -40,6 +53,13 @@ class Header extends Component {
                                 <NavLink className="nav-link" to='/contactus'><span className="fa fa-address-card fa-lg"></span> Contact Us</NavLink>
                             </NavItem>
                             </Nav>
+                            <Nav className="ml-auto" navbar>
+                                <NavItem>
+                                    <Button onClick={this.toggleModal.bind(this)}>
+                                        <span className="fa fa-sign-in fa-lg"></span> Login
+                                    </Button>
+                                </NavItem>
+                            </Nav>
                         </Collapse>
                     </div>
                 </Navbar>
@@ -53,6 +73,26 @@ class Header extends Component {
                         </div>
                     </div>
                 </Jumbotron>
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleModal.bind(this)}>Login</ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={this.handlelogin.bind(this)}>
+                            <FormGroup>
+                                <Label htmlFor="username"> Username</Label>
+                                <Input type="text" id="username" name="username" innerRef={(input) => this.username = input}></Input>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="password"> Password</Label>
+                                <Input type="password" id="password" name="password" innerRef={(input) => this.password = input}></Input>
+                            </FormGroup>
+                            <FormGroup check>
+                                <Label check></Label>
+                                <Input type="checkbox" name="remember" innerRef={(input) => this.remember = input}></Input> Remember me
+                            </FormGroup>
+                            <Button type="submit" value="submit" className="bg-primary">Login</Button>
+                        </Form>
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
