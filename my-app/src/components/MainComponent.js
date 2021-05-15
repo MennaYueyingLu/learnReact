@@ -19,9 +19,6 @@ const mapStateToProps = state => {
 }
 
 class Main extends Component {
-    constructor(propos) {
-        super(propos);
-    }
 
     render() {
         const HomePage = () => {
