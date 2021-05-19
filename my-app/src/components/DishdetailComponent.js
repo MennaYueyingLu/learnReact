@@ -1,15 +1,16 @@
 import {
     Card, CardImg, CardText, CardBody,
-    CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Label
+    CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Label,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Component } from 'react';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import {Loading} from './LoadingComponent';
 
 function RenderDish({ dish }) {
     if (dish != null) {
         return (
-            <Card>
+            <Card className="col-12 col-md-5 m-1">
                 <CardImg width="100%" src={dish.image} alt={dish.name}></CardImg>
                 <CardBody>
                     <CardTitle>{dish.name}</CardTitle>
@@ -24,7 +25,7 @@ function RenderDish({ dish }) {
     }
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
     if (comments) {
         const commentsComponent = comments.map((comment) => {
             return (
@@ -35,11 +36,11 @@ function RenderComments({ comments }) {
             );
         });
         return (
-            <div><h4>Comments</h4>{commentsComponent}<CommentForm></CommentForm></div>
+            <div className="col-12 col-md-5 m-1"><h4>Comments</h4>{commentsComponent}<CommentForm addComment={addComment} dishId={dishId}></CommentForm></div>
         );
     } else {
         return (
-            <div><CommentForm></CommentForm></div>
+            <div className="col-12 col-md-5 m-1"><CommentForm addComment={addComment} dishId={dishId}></CommentForm></div>
         );
     }
 }
@@ -62,8 +63,9 @@ class CommentForm extends Component {
         });
     }
 
-    handleSubmit(){
-
+    handleSubmit(values){
+        this.toggleModal();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -90,6 +92,7 @@ class CommentForm extends Component {
                             }}></Errors>
                             <Label htmlFor="comment">Comment</Label>
                             <Control.textarea rows="6" className="form-control" model=".comment" id="comment" name="comment"></Control.textarea>
+                            <Button type="submit" color="primary">Submit</Button>
                         </LocalForm>
                     </ModalBody>
                 </Modal>
@@ -99,7 +102,24 @@ class CommentForm extends Component {
     }
 }
 
-const DishDetail = ({ dish, comments }) => {
+const DishDetail = ({ dish, isLoading, errMess, comments, addComment }) => {
+    if(isLoading){
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading></Loading>
+                </div>
+            </div>
+        )
+    }else if(errMess){
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{errMess}</h4>
+                </div>
+            </div>
+        )
+    }
     if (!dish) return (<div></div>);
     return (
         <div className="container">
@@ -114,12 +134,8 @@ const DishDetail = ({ dish, comments }) => {
                 </div>
             </div>
             <div className="row">
-                <div className="col-12 col-md-5 m-1">
-                    <RenderDish dish={dish} />
-                </div>
-                <div className="col-12 col-md-5 m-1">
-                    <RenderComments comments={comments} />
-                </div>
+                <RenderDish dish={dish} />
+                <RenderComments comments={comments} addComment={addComment} dishId={dish.id}/>
             </div>
         </div>
     );
